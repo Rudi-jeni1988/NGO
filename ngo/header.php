@@ -1,3 +1,6 @@
+<?php
+  $activePage = basename($_SERVER['PHP_SELF'], ".php");
+?>
 <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
@@ -8,39 +11,22 @@
 
       <nav id="navmenu" class="navmenu d-flex">
         <ul>
-          <li><a href="home.php" class="active">Home</a></li>
-          <li><a href="funds.php">Funds</a></li>
-          <li><a href="document.php">Documents</a></li>
-          <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li> 
-          <li><a href="index.html#contact">Contact</a></li>-->
+          <li class="nav-item <?= ($activePage == 'home') ? 'active':''; ?>"><a href="home.php">Home</a></li>
+          <li class="nav-item <?= ($activePage == 'funds') ? 'active':''; ?>"><a href="funds.php">Funds</a></li>
+          <li class="nav-item <?= ($activePage == 'document') ? 'active':''; ?>"><a href="document.php">Documents</a></li>
+          <li class="nav-item <?= ($activePage == 'notification') ? 'active':''; ?>"><a href="notification.php">Notification</a></li>
+          
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         <ul>
             <li class="dropdown"><a href="#"><img src="../img/profile.png" width="40" class="rounded-pill border"></a>
             <ul>
               <li><a href="profile.php">Profile</a></li>
-              <li><a href="#">Logout</a></li>
+              <li><a href="../index.php">Logout</a></li>
             </ul>
           </li> 
         </ul>
       </nav>
-
 
     </div>
   </header>

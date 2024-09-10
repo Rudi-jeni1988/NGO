@@ -23,11 +23,12 @@
 
         <div class="row">
 
-        <div class="col-lg-12 content ngo-cont mt-5" style="min-height:100vh;">
+        <div class="col-lg-12 content admin-cont mt-5" style="min-height:100vh;">
           <div class="row">
+          <div class="col-lg-12">
+
               <h3 class="mt-5">Fund Reqest</h3>
 
-              <div class="col-lg-6">
                   <ul>
                     <li>
                         <p><b>First NGO’s Registration</b> <a href="" class="float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">View</a></p>
@@ -36,10 +37,6 @@
                         <p>Trust & Foundation</p>
                         <p class="float-end text-end "><a href="" class="btn open-btn">Transfer</a></p><br>
                     </li>
-                  </ul>
-              </div>
-              <div class="col-lg-6">
-                  <ul>
                    
                     <li>
                         <p><b>Child Welfare Fund</b> <a href="" class="float-end">View</a></p>

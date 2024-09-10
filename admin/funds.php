@@ -23,18 +23,18 @@
 
         <div class="row">
 
-        <div class="col-lg-12 content ngo-cont mt-5" style="min-height:100vh;">
+        <div class="col-lg-12 content admin-cont mt-5" style="min-height:100vh;">
           <div class="row">
               <h3 class="mt-5">Fund Reqest</h3>
 
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                     <ul>
                       <li>
                         <p><b>User 123</b> </p>
                         <p>BC14578963F</p>
                         <p>12 Sept 1996</p>
                         <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
+                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p>
                       </li>
                       
                   </ul>

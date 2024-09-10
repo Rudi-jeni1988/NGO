@@ -33,31 +33,31 @@
 
         <div class="row">
 
-        <div class="col-lg-12 content ngo-cont mt-5" style="min-height:100vh;">
+        <div class="col-lg-12 content admin-cont" style="min-height:100vh;">
           <div class="row">
               <div class="col-lg-12">
-                  <h3 class="mt-5">Pending Registration</h3>
+                  <h3 class="mt-5">Upload Document</h3>
                   <ul>
                       <li>
-                        <p><b>First NGO’s Registration</b> <span class="open-btn float-end">Open</span></p>
+                        <p><b>First NGO’s Registration</b> <span class="open-btn float-end"><a href="fund-doc.pdf" class="text-white" target="_blank">View</a></span></p>
                         <p>BC14578963F</p>
                         <p>12 Sept 1996</p>
                         <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
+                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p>
                       </li>
                       <li>
-                        <p><b>Second NGO’s Registration</b> <span class="open-btn float-end">Open</span></p>
+                        <p><b>Second NGO’s Registration</b> <span class="open-btn float-end">View</span></p>
                         <p>BC14578963F</p>
                         <p>12 Sept 1996</p>
                         <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
+                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p>
                       </li>
                       <li>
                         <p><b>Third NGO’s Registration</b> </p>
                         <p>BC14578963F</p>
                         <p>12 Sept 1996</p>
                         <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
+                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p>
                       </li>
                   </ul>
               </div>
