@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexFund</title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="../css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../css/font-awesome.css" rel="stylesheet" type="text/css"/>
-      <!-- Main CSS File -->
-    <link href="../css/main.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexFund</title>
+  <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+  <link href="../css/font-awesome.css" rel="stylesheet" type="text/css" />
+  <!-- Main CSS File -->
+  <link href="../css/main.css" rel="stylesheet">
 </head>
 
 <body class="fund-page">
 
- <?php include('header.php'); ?>
+  <?php include('header.php'); ?>
 
   <main class="main">
 
@@ -23,55 +24,26 @@
 
         <div class="row">
 
-        <div class="col-lg-12 content ngo-cont mt-5" style="min-height:100vh;">
-          <div class="row">
+          <div class="col-lg-12 content ngo-cont mt-5" style="min-height:100vh;">
+            <div class="row">
+
               <div class="col-lg-6">
-                  <h3 class="mt-5">Pending Registration</h3>
-                  <ul>
-                      <li>
-                        <p><b>First NGO’s Registration</b> <span class="open-btn float-end">Open</span></p>
-                        <p>BC14578963F</p>
-                        <p>12 Sept 1996</p>
-                        <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
-                      </li>
-                      <li>
-                        <p><b>Second NGO’s Registration</b> <span class="open-btn float-end">Open</span></p>
-                        <p>BC14578963F</p>
-                        <p>12 Sept 1996</p>
-                        <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
-                      </li>
-                      <li>
-                        <p><b>Third NGO’s Registration</b> </p>
-                        <p>BC14578963F</p>
-                        <p>12 Sept 1996</p>
-                        <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn btn-danger me-2">Reject</a><a href="" class="btn btn-success">Approve</a></p><br>
-                      </li>
-                  </ul>
+                <h3 class="mt-5">Pending Funds</h3>
+                <ul class="pending-funds">
+                  <!-- AJAX will populate the pending funds list here -->
+                </ul>
               </div>
+
+
               <div class="col-lg-6">
-                  <h3 class="mt-5">Pending Funds</h3>
-                  <ul>
-                    <li>
-                        <p><b>First NGO’s Registration</b> </p>
-                        <p>5,00,000</p>
-                        <p>12 Sept 1996</p>
-                        <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn open-btn me-2">View</a></p><br>
-                    </li>
-                    <li>
-                        <p><b>Child Welfare Fund</b> </p>
-                        <p>5,00,000</p>
-                        <p>12 Sept 1996</p>
-                        <p>Trust & Foundation</p>
-                        <p class="float-end text-end "><a href="" class="btn open-btn me-2">View</a></p><br>
-                    </li>
-                  </ul>
+                <h3 class="mt-5">Rejected Funds</h3>
+                <ul class="rejected-funds">
+                  <!-- Rejected funds will be populated here via AJAX -->
+                </ul>
               </div>
+
+            </div>
           </div>
-      </div>
 
         </div>
 
@@ -93,6 +65,135 @@
   <script src="../js/bootstrap.min.js"></script>
   <!-- Main JS File -->
   <script src="../js/main.js"></script>
+
+  <!-- Pending Proposal -->
+  <script>
+    $(document).ready(function() {
+      $.ajax({
+        url: '../api/ngo_proposal_status.php',
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+          if (response.status === 200) {
+            // Clear the existing list
+            const pendingFundsContainer = $('.pending-funds');
+            pendingFundsContainer.empty();
+
+            // Iterate over the response data
+            response.data.forEach(function(item) {
+              // Create a new list item with the fetched data
+              const listItem = `
+                        <li>
+                            <p><b>${item.ngo_name}</b> <span class="open-btn float-end"><a href="../proposal/${item.doc_name}" class="text-white" target="_blank">Open</a></span></p>
+                            <p>${item.ngo_uin}</p>
+                            <p>${new Date(item.date).toLocaleDateString()}</p>
+                            <p>${item.trust_name}</p>
+                            <p class="float-end text-end">
+                                <a href="#" class="btn btn-danger me-2 reject-btn" data-id="${item.trust_proposal_id}">Reject</a>
+                                <a href="#" class="btn btn-success approve-btn" data-id="${item.trust_proposal_id}">Approve</a>
+                            </p><br>
+                        </li>`;
+
+              // Append the newly created list item to the pending funds container
+              pendingFundsContainer.append(listItem);
+              // Using function Handle Approve button click
+              $('.approve-btn').on('click', function(event) {
+                event.preventDefault();
+                let userId = $(this).data('id');
+                updateProposalStatus(userId, "approve");
+              });
+
+              // Using function Handle Reject button click 
+              $('.reject-btn').on('click', function(event) {
+                event.preventDefault();
+                let userId = $(this).data('id');
+                updateProposalStatus(userId, "reject");
+              });
+
+            });
+          } else {
+            // If no records are found, display a message
+            $('.pending-funds').html('<li>No pending funds found.</li>');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+          $('.pending-funds').html('<li>There was an error loading the data.</li>');
+        }
+      });
+    });
+  </script>
+
+  <!-- Update Proposal Status -->
+  <script>
+    function updateProposalStatus(userId, action) {
+      $.ajax({
+        url: '../api/update_proposal_status.php', // Change to your API URL
+        method: 'POST',
+        data: JSON.stringify({
+          id: userId,
+          status: action
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+          if (response.status === 200) {
+            alert(response.message); // Success message
+            // Optionally, you can refresh the list or hide the updated entry
+            location.reload(); // Reload the page to reflect changes
+          } else {
+            alert(response.message); // Error or failure message
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+          alert('Something went wrong while updating user status.');
+        }
+      });
+    }
+  </script>
+
+  <!--All Rejected Proposal -->
+  <script>
+    $(document).ready(function() {
+      // AJAX request to fetch rejected funds
+      $.ajax({
+        url: '../api/rejected_funds.php', // API endpoint for fetching rejected proposals
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+          if (response.status === 200) {
+            // Clear the existing list
+            const rejectedFundsContainer = $('.rejected-funds');
+            rejectedFundsContainer.empty();
+
+            // Loop through each rejected fund
+            response.data.forEach(function(item) {
+              const listItem = `
+                        <li>
+                            <p><b>${item.ngo_name}</b></p>
+                            <p>${item.amount}</p>
+                            <p>${new Date(item.date).toLocaleDateString()}</p>
+                            <p>${item.trust_name}</p>
+                            <p class="float-end text-end">
+                                <a href="../proposal/${item.doc_name}" target="_blank" class="btn open-btn me-2">View</a>
+                            </p><br>
+                        </li>`;
+
+              // Append the rejected fund item to the list
+              rejectedFundsContainer.append(listItem);
+            });
+          } else {
+            // Display a message if no rejected funds are found
+            $('.rejected-funds').html('<li>No rejected funds found.</li>');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+          $('.rejected-funds').html('<li>There was an error loading the data.</li>');
+        }
+      });
+    });
+  </script>
 
 </body>
 

@@ -21,10 +21,9 @@
         </ul>
         <!-- background effect -->
 
-
         <div class="login-form">
         <h3 class="text-center mb-4">Login</h3>
-        <form action="login-detail.php" method="POST">
+        <form id="loginForm" method="POST">
             <div class="mb-4">
                 <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email address">
             </div>
@@ -52,6 +51,67 @@
 	$('.page-loader').fadeOut('slow');
 	},1000);
 });
-</script>       
+</script>  
+
+<script>
+    $('#loginForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent the form from submitting the traditional way
+
+        let formData = {
+            email: $('#email').val().trim(),
+            password: $('#password').val().trim()
+        };
+
+        // Basic frontend validation
+        if (formData.email === "") {
+            alert("Please enter your email address");
+            return;
+        }
+        if (formData.password === "") {
+            alert("Please enter your password");
+            return;
+        }
+
+        // Send the login request via AJAX
+        $.ajax({
+            url: 'api/login.php', // Your API endpoint
+            type: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.status === 200) {
+                    // Login successful, check the user type for redirection
+                    alert('Login successful! Welcome, ' + response.user_name);
+
+                    // Redirect based on user type
+                    switch (response.user_type) {
+                        case 'Admin':
+                            window.location.href = "admin/home.php"; // Admin dashboard
+                            break;
+                        case 'Trust':
+                            window.location.href = "user/home.php"; // Trust dashboard
+                            break;
+                        case 'NGO':
+                            window.location.href = "ngo/home.php"; // NGO dashboard
+                            break;
+                        default:
+                            alert('Unknown user type. Please contact support.');
+                    }
+                } else if (response.status === 401) {
+                    // Invalid email or password
+                    alert('UnAuthorized ' + response.message);
+                } else {
+                    // Any other error message
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // If there's a server-side error or network issue
+                alert('An error occurred: ' + error);
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

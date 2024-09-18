@@ -250,6 +250,21 @@ p a i{
   #custom-button:hover {
     background-color: #2C3E50;
   }
+
+  #submit-btn {
+    padding: 10px;
+    color: white;
+    background-color: #2C3E50;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    
+  }
+  
+  #submit-btn:hover {
+    background-color: #2C3E50;
+  }
   
   #custom-text {
     margin-left: 0;
