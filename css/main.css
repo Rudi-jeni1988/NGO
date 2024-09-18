@@ -89,7 +89,9 @@
 .index-page.scrolled .header {
   --background-color: #ffffff;
 }
-
+.navmenu.active a{
+  color: #77b6ca;
+}
 /*--------------------------------------------------------------
 # Navigation Menu
 --------------------------------------------------------------*/
@@ -111,18 +113,20 @@
     position: relative;
   }
 
-  .navmenu a,
-  .navmenu a:focus {
+  .navmenu li a,
+  .navmenu li a:focus {
     color: #313336;
     padding: 10px 25px;
     font-size: 16px;
-    font-family: var(--nav-font);
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: space-between;
     white-space: nowrap;
     transition: 0.3s;
+  }
+  .navmenu .nav-item.active a{
+    color: #0060c1;
   }
 
   .navmenu a i,
@@ -137,9 +141,9 @@
     padding-right: 0;
   }
 
-  .navmenu li:hover>a,
-  .navmenu .active,
-  .navmenu .active:focus {
+  .navmenu li:hover,
+  .navmenu.active,
+  .navmenu.active:focus {
     color: #77b6ca;
   }
 

@@ -25,6 +25,7 @@
 
 <body class="fund-page">
 
+
     <?php include('header.php'); ?>
 
     <main class="main">
@@ -128,6 +129,7 @@
             });
         });
     </script>
+
 </body>
 
 </html>

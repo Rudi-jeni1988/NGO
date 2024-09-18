@@ -1,6 +1,9 @@
 <?php
+
   $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
+
+
 
 <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
@@ -12,10 +15,12 @@
 
       <nav id="navmenu" class="navmenu d-flex">
         <ul>
+
           <li><a href="home.php" class="<?= $currentPage == 'home.php' ? 'active' : '' ?>">Home</a></li>
           <li><a href="funds.php" class="<?= $currentPage == 'funds.php' ? 'active' : '' ?>">Funds</a></li>
           <li><a href="document.php" class="<?= $currentPage == 'document.php' ? 'active' : '' ?>">Documents</a></li>
           <li><a href="notification.php" class="<?= $currentPage == 'notification.php' ? 'active' : '' ?>">Notification</a></li>
+
           
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -28,7 +33,6 @@
           </li> 
         </ul>
       </nav>
-
 
     </div>
   </header>
