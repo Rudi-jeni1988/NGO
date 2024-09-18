@@ -9,7 +9,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // echo $username;
 
     // Query to check the user credentials
-    $sql = "SELECT * FROM register WHERE email = '$email' AND password = '$password'"; 
+    $sql = "SELECT * FROM login WHERE email = '$email' AND password = '$password'"; 
     // echo $password;
     $result = $conn->query($sql); 
 

@@ -1,6 +1,10 @@
 <?php
-  $activePage = basename($_SERVER['PHP_SELF'], ".php");
+
+  $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
+
+
+
 <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
@@ -11,15 +15,17 @@
 
       <nav id="navmenu" class="navmenu d-flex">
         <ul>
-          <li class="nav-item <?= ($activePage == 'home') ? 'active':''; ?>"><a href="home.php">Home</a></li>
-          <li class="nav-item <?= ($activePage == 'funds') ? 'active':''; ?>"><a href="funds.php">Funds</a></li>
-          <li class="nav-item <?= ($activePage == 'document') ? 'active':''; ?>"><a href="document.php">Documents</a></li>
-          <li class="nav-item <?= ($activePage == 'notification') ? 'active':''; ?>"><a href="notification.php">Notification</a></li>
+
+          <li><a href="home.php" class="<?= $currentPage == 'home.php' ? 'active' : '' ?>">Home</a></li>
+          <li><a href="funds.php" class="<?= $currentPage == 'funds.php' ? 'active' : '' ?>">Funds</a></li>
+          <li><a href="document.php" class="<?= $currentPage == 'document.php' ? 'active' : '' ?>">Documents</a></li>
+          <li><a href="notification.php" class="<?= $currentPage == 'notification.php' ? 'active' : '' ?>">Notification</a></li>
+
           
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         <ul>
-            <li class="dropdown"><a href="#"><img src="../img/profile.png" width="40" class="rounded-pill border"></a>
+            <li class="dropdown"><a href="#"><img src="../img/admin-icon.png" width="40" class="rounded-pill border"></a>
             <ul>
               <li><a href="profile.php">Profile</a></li>
               <li><a href="../index.php">Logout</a></li>
