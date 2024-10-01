@@ -89,25 +89,32 @@
                             <p>${new Date(item.date).toLocaleDateString()}</p>
                             <p>${item.trust_name}</p>
                             <p class="float-end text-end">
-                                <a href="#" class="btn btn-danger me-2 reject-btn" data-id="${item.trust_proposal_id}">Reject</a>
-                                <a href="#" class="btn btn-success approve-btn" data-id="${item.trust_proposal_id}">Approve</a>
+                                <a href="#" class="btn btn-danger me-2 reject-btn" data-id="${item.trust_proposal_id}" data-trustid="${item.trustId}" data-ngoname="${item.ngo_name}" data-purpose="${item.purpose}">Reject</a>
+                                <a href="#" class="btn btn-success approve-btn" data-id="${item.trust_proposal_id}" data-trustid="${item.trustId}" data-ngoname="${item.ngo_name}" data-purpose="${item.purpose}">Approve</a>
                             </p><br>
                         </li>`;
 
               // Append the newly created list item to the pending funds container
               pendingFundsContainer.append(listItem);
+
               // Using function Handle Approve button click
               $('.approve-btn').on('click', function(event) {
                 event.preventDefault();
                 let userId = $(this).data('id');
-                updateProposalStatus(userId, "approve");
+                let trustId = $(this).data('trustid');
+                let ngo_name = $(this).data('ngoname');
+                let purpose = $(this).data('purpose');
+                updateProposalStatus(userId, "approve", trustId, ngo_name, purpose);
               });
 
               // Using function Handle Reject button click 
               $('.reject-btn').on('click', function(event) {
                 event.preventDefault();
                 let userId = $(this).data('id');
-                updateProposalStatus(userId, "reject");
+                let trustId = $(this).data('trustid');
+                let ngo_name = $(this).data('ngoname');
+                let purpose = $(this).data('purpose');
+                updateProposalStatus(userId, "reject", trustId, ngo_name, purpose);
               });
 
             });
@@ -126,19 +133,30 @@
 
   <!-- Update Proposal Status -->
   <script>
-    function updateProposalStatus(userId, action) {
+    function updateProposalStatus(userId, action, trustId, ngo_name, purpose) {
       $.ajax({
         url: '../api/update_proposal_status.php', // Change to your API URL
         method: 'POST',
         data: JSON.stringify({
           id: userId,
-          status: action
+          status: action,
+          trustId: trustId,
+          ngo_name: ngo_name,
+          purpose: purpose
         }),
+
         contentType: 'application/json',
+
         success: function(response) {
           if (response.status === 200) {
             alert(response.message); // Success message
-            // Optionally, you can refresh the list or hide the updated entry
+            sendNotification({
+              status: action,
+              trustId: trustId,
+              ngo_name: ngo_name,
+              purpose: purpose
+            });
+
             location.reload(); // Reload the page to reflect changes
           } else {
             alert(response.message); // Error or failure message
@@ -147,6 +165,43 @@
         error: function(xhr, status, error) {
           console.error('Error:', error);
           alert('Something went wrong while updating user status.');
+        }
+      });
+    }
+    
+    // Function to send a notification after successful form submission
+    function sendNotification(data) {
+      // Prepare notification data for API call
+      const notificationData = {
+        title: "Fund Request Status",
+        content: `The Fund Requested for  ${data.purpose} to ${data.ngo_name} has Been ${data.status} .`,
+        userid: data.trustId
+      };
+
+      // Send the notification using AJAX
+      $.ajax({
+        url: '../api/notification.php', // API endpoint for sending notifications
+        method: 'POST',
+        data: JSON.stringify(notificationData), // Send data as JSON
+        contentType: 'application/json',
+        success: function(response) {
+          if (response.status === 201) {
+            console.log('Notification sent successfully!');
+          } else {
+            console.log('Notification failed: ' + response.message);
+          }
+        },
+        error: function(xhr, status, error) {
+          try {
+            let response = JSON.parse(xhr.responseText);
+            if (response.message) {
+              console.log('Error: ' + response.message);
+            } else {
+              console.log('An unexpected error occurred.');
+            }
+          } catch (e) {
+            console.log('An error occurred: ' + error);
+          }
         }
       });
     }

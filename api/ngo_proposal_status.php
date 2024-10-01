@@ -31,8 +31,7 @@ try {
     }
 
     // Query to join the trust_proposal and login tables
-    $query = "SELECT tp.*, ngo.name AS ngo_name, trust.name AS trust_name 
-              FROM trust_proposal tp 
+    $query = "SELECT tp.*, ngo.name AS ngo_name, trust.name AS trust_name, tp.trust_name AS trustId              FROM trust_proposal tp 
               INNER JOIN login ngo ON tp.ngo_name = ngo.id 
               INNER JOIN login trust ON tp.trust_name = trust.id 
               WHERE tp.ngo_name = $ngo_id AND tp.ngo_status = 0";
@@ -50,6 +49,7 @@ try {
             $records[] = [
                 'trust_proposal_id' => $record['tid'],
                 'trust_name' => $record['trust_name'],
+                'trustId' => $record['trustId'],
                 'ngo_name' => $record['ngo_name'],
                 'ngo_uin' => $record['ngo_uin'],
                 'ngo_status' => $record['ngo_status'],

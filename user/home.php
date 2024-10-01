@@ -14,8 +14,8 @@ include('../dbconfig.php');
   <!-- Main CSS File -->
   <link href="../css/main.css" rel="stylesheet">
   <style>
-    h6.text-light{
-      color:#808181 !important;
+    h6.text-light {
+      color: #808181 !important;
     }
   </style>
 </head>
@@ -119,7 +119,7 @@ include('../dbconfig.php');
               <div class="quick-access">
                 <h4>Track request</h4>
                 <p><a href="#" id="trackStatus" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">Track the status of your request</a> <i class="fa fa-solid fa-spinner"></i></p>
-            
+
                 <p class="mb-0"><a href=""><i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a></p>
               </div>
             </div>
@@ -135,16 +135,16 @@ include('../dbconfig.php');
                 </div>
                 <div class="modal-body">
                   <div class="col-md-12">
-                      <div class="row">
-                          <div class="col-md-6">
-                              <h6 class="text-light">Available Fund</h6>
-                              <p><b>10,000.00</b></p>
-                          </div>
-                          <div class="col-md-6">
-                            <h6 class="text-light">Used Fund</h6>
-                            <p><b>5,000.00</b></p>
-                          </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6 class="text-light">Available Fund</h6>
+                        <p><b>10,000.00</b></p>
                       </div>
+                      <div class="col-md-6">
+                        <h6 class="text-light">Used Fund</h6>
+                        <p><b>5,000.00</b></p>
+                      </div>
+                    </div>
                   </div>
                   <table class="table">
                     <thead>
@@ -208,7 +208,7 @@ include('../dbconfig.php');
               <h5>Trust Details</h5>
               <div class="mb-3">
                 <label class="form-label">Purpose of the Trust</label>
-                <input type="text" name="purpose" class="form-control" placeholder="Specify the purpose">
+                <input type="text" name="purpose" id="purpose" class="form-control" placeholder="Specify the purpose">
               </div>
               <div class="mb-3">
                 <label class="form-label">Amount Requested</label>
@@ -272,7 +272,7 @@ include('../dbconfig.php');
           <div class="modal-body">
             <form id="addimgForm" enctype="multipart/form-data">
               <h5>Upload Image</h5>
-              
+
               <div class="mb-3">
                 <!-- <label class="form-label">Trust Image</label> -->
                 <input type="file" name="image_name" class="form-control" placeholder="Expected outcome">
@@ -295,21 +295,20 @@ include('../dbconfig.php');
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-          <form id="addbioForm" enctype="multipart/form-data">
+            <form id="addbioForm" enctype="multipart/form-data">
               <h5>Trust Details</h5>
               <?php
-                  // Fetch Trust Details from the database
-                  $user_id = $_SESSION["id"];
-                  $query = "SELECT * FROM login WHERE id=$user_id";
-                  $result = $conn->query($query);
-                  while ($row = $result->fetch_assoc()) {
-                    $trust_name = $row['name'];
-                    $uin = $row['uin'];
-                    $mob_no = $row['mobno'];
-                    $email = $row['email'];
-                    $password = $row['password'];
-                   
-                  }
+              // Fetch Trust Details from the database
+              $user_id = $_SESSION["id"];
+              $query = "SELECT * FROM login WHERE id=$user_id";
+              $result = $conn->query($query);
+              while ($row = $result->fetch_assoc()) {
+                $trust_name = $row['name'];
+                $uin = $row['uin'];
+                $mob_no = $row['mobno'];
+                $email = $row['email'];
+                $password = $row['password'];
+              }
               ?>
 
               <div class="mb-3">
@@ -321,7 +320,7 @@ include('../dbconfig.php');
                 <label class="form-label">Unique Identity Number</label>
                 <input type="text" name="trust_uin" class="form-control" value="<?php echo $uin; ?>" placeholder="Unique Identification Number">
               </div>
-            
+
               <div class="mb-3">
                 <label class="form-label">Mobile Number</label>
                 <input type="text" name="mob_no" value="<?php echo $mob_no; ?>" class="form-control" placeholder="Moile Number">
@@ -384,30 +383,85 @@ include('../dbconfig.php');
       $('#proposalForm').submit(function(e) {
         e.preventDefault(); // Prevent form submission
 
-        var formData = new FormData(this); // Collect form data, including the file
+        // Prepare data for the notification
+        let NotiData = {
+          trust_name: "<?= $_SESSION['name'] ?>",
+          user_id: $('#ngoNameSelect').val().trim(), 
+          purpose: $('#purpose').val().trim(), 
+        };
 
+        // Collect form data (including the file)
+        var formData = new FormData(this);
+
+        // Submit the proposal form using AJAX
         $.ajax({
-          url: '../api/submit_proposal.php', // API URL
+          url: '../api/submit_proposal.php', // API endpoint for form submission
           method: 'POST',
           data: formData,
           contentType: false, // Required for file uploads
           processData: false, // Required for file uploads
           success: function(response) {
+            // Check if the API responded with success
             if (response.status === 200) {
-              alert(response.message);
+              alert(response.message); // Notify user of success
+
+              // Send notification only after the form is successfully submitted
+              sendNotification(NotiData);
+
+              // Optionally reload the page to reset form
               location.reload();
             } else {
+              // Handle any errors returned by the API
               alert('Error: ' + response.message);
             }
           },
           error: function(xhr, status, error) {
             console.error('Error:', error);
-            alert('Something went wrong.');
+            alert('Something went wrong during the proposal submission.');
           }
         });
       });
     });
+
+    // Function to send a notification after successful form submission
+    function sendNotification(NotiData) {
+      // Prepare notification data for API call
+      const notificationData = {
+        title: "New Fund Request",
+        content: `Trust ${NotiData.trust_name} has requested a new fund for ${NotiData.purpose}.`,
+        userid: NotiData.user_id // Assuming UIN is used as user ID
+      };
+
+      // Send the notification using AJAX
+      $.ajax({
+        url: '../api/notification.php', // API endpoint for sending notifications
+        method: 'POST',
+        data: JSON.stringify(notificationData), // Send data as JSON
+        contentType: 'application/json',
+        success: function(response) {
+          if (response.status === 201) {
+            console.log('Notification sent successfully!');
+          } else {
+            console.log('Notification failed: ' + response.message);
+          }
+        },
+        error: function(xhr, status, error) {
+          try {
+            let response = JSON.parse(xhr.responseText);
+            if (response.message) {
+              console.log('Error: ' + response.message);
+            } else {
+              console.log('An unexpected error occurred.');
+            }
+          } catch (e) {
+            console.log('An error occurred: ' + error);
+          }
+        }
+      });
+    }
   </script>
+
+
 
   <!-- user update profile img submit -->
   <script>

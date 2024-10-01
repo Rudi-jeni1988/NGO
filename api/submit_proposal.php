@@ -34,7 +34,7 @@ try {
     $account_no = isset($_POST['account_no']) ? $_POST['account_no'] : null;
     $ifsc = isset($_POST['ifsc']) ? $_POST['ifsc'] : null;
     $account_type = isset($_POST['account_type']) ? $_POST['account_type'] : null;
-    $ngo_status = "Pending"; // Default status for newly submitted proposals
+    $ngo_status = "0"; // Default status for newly submitted proposals
 
     // Validate required fields
     if (empty($ngo_name) || empty($ngo_uin) || empty($authorized_name) || empty($ngo_number) || empty($purpose) || empty($amount)) {

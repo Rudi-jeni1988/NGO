@@ -75,7 +75,7 @@
 
             let formData = {
                 name: $('#name').val().trim(),
-                uin:$('#uin').val().trim(),
+                uin: $('#uin').val().trim(),
                 email: $('#email').val().trim(),
                 role: $('#role').val().trim(),
                 password: $('#password').val().trim(),
@@ -87,6 +87,7 @@
                 alert('All fields are required!');
                 return;
             }
+            
 
             if (!validateEmail(formData.email)) {
                 alert('Please enter a valid email address!');
@@ -106,13 +107,13 @@
                 success: function(response) {
                     if (response.status === 201) {
                         alert('Signup successful!');
+                        sendNotification(formData); // Call notification function after successful signup
                         window.location.href = "index.php"; // Redirect to login page on success
                     } else {
                         alert('Error: ' + response.message); // Display API-specific error message
                     }
                 },
                 error: function(xhr, status, error) {
-                    // Handle and display specific error messages from the API
                     try {
                         let response = JSON.parse(xhr.responseText);
                         if (response.message) {
@@ -132,7 +133,45 @@
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
         }
+
+        // Function to send notification after successful signup
+        function sendNotification(formData){
+            const notificationData = {
+                title: "New User Registered",
+                content: `New ${formData.role} user named as ${formData.name} has been logged in with UIN Number: ${formData.uin}`,
+                userid: 11
+                // userid: formData.uin // Assuming UIN is used as user ID
+            };
+
+            $.ajax({
+                url: 'api/notification.php',
+                method: 'POST',
+                data: JSON.stringify(notificationData), // Send notification data as JSON
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.status === 201) {
+                        console.log('Notification sent successfully!');
+                    } else {
+                        console.log('Notification failed: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    try {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            console.log('Error: ' + response.message);
+                        } else {
+                            console.log('An unexpected error occurred.');
+                        }
+                    } catch (e) {
+                        console.log('An error occurred: ' + error);
+                    }
+                }
+            });
+        }
+
     </script>
+
 
 
 
